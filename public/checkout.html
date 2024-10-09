@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finalizar Compra</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h2>Finalizar Compra</h2>
+    <div id="checkout">
+        <p>Escolha o método de pagamento:</p>
+        <button onclick="processPayment('cartao')">Cartão de Crédito</button>
+        <button onclick="processPayment('pix')">PIX</button>
+    </div>
+    <div id="payment-result"></div>
+
+    <script>
+async function processPayment(method) {
+    try {
+        const response = await fetch(`http://localhost:3000/payment/${method}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ total: 100.00 }) // Simulação de valor do pagamento
+        });
+
+        const result = await response.json();
+        document.getElementById('payment-result').innerHTML = `
+            <p>Status do pagamento: ${result.status}</p>
+        `;
+    } catch (error) {
+        console.error('Erro no pagamento:', error);
+        document.getElementById('payment-result').innerHTML = `
+            <p>Ocorreu um erro no processamento do pagamento.</p>
+        `;
+    }
+}
+    </script>
+</body>
+</html>
+

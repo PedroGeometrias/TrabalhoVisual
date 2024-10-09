@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Boot Sequence</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <section id="products" class="section">
+            <h2>Produtos</h2>
+            <div id="product-list"></div>
+        </section>
+<button onclick="window.location.href='/checkout.html'">Finalizar Compra</button>
+
+        <footer>
+            <p>&copy; 2024 Minha Loja. Todos os direitos reservados.</p>
+        </footer>
+
+    </body>
+    <script>
+    // Função para buscar produtos da API e exibi-los
+    async function fetchProducts() {
+        const response = await fetch('http://localhost:3000/produtos');
+        const products = await response.json();
+        const productList = document.getElementById('product-list');
+
+        products.forEach(product => {
+            const productDiv = document.createElement('div');
+            productDiv.classList.add('product');
+
+            productDiv.innerHTML = `
+<h3>${product.nome}</h3>
+<p>${product.descricao}</p>
+<p>Preço: R$ ${product.preco}</p>
+<button onclick="addToCart(${product.id})">Adicionar ao Carrinho</button>
+`;
+
+            productList.appendChild(productDiv);
+        });
+    }
+
+    // Função para adicionar o produto ao carrinho
+    async function addToCart(productId) {
+        await fetch('http://localhost:3000/cart/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ productId, quantidade: 1 }),
+        });
+
+        alert('Produto adicionado ao carrinho!');
+    }
+
+    // Chama a função quando a página carrega
+    fetchProducts();
+    </script>
+
+
